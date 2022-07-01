@@ -34,6 +34,7 @@ public class TrainerServiceImpl implements TrainerServiceInterface {
     }
 
     @Override
+    @Transactional
     public void deleteTrainer(Integer Key) {
         trainerRepo.delete(trainerRepo.findById(Key).get());
     }

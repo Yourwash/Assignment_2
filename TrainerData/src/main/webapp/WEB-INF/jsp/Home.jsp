@@ -76,19 +76,78 @@
                 </div>
             </nav><!-- End of Bootstrap Navigation Bar -->
 
-            <div class='container-fluid my-5'>               
-                <h1>Trainers' Data</h1>
-                <div class='row border-top border-bottom border-secondary mb-2'>
-                    <div class='col fs-4 fw-bold'>Id</div>
-                    <div class='col fs-4 fw-bold'>First Name</div>
-                    <div class='col fs-4 fw-bold'>Last Name</div>
-                    <div class='col fs-4 fw-bold'>Subjects</div>
-                    <div class='col fs-4 fw-bold'>Actions</div>
+            <h1>Trainers' Data</h1>
+            <div class='row border-top border-bottom border-secondary mb-2 mx-2'>
+                <div class='col fs-4 fw-bold'>Id</div>
+                <div class='col fs-4 fw-bold'>First Name</div>
+                <div class='col fs-4 fw-bold'>Last Name</div>
+                <div class='col fs-4 fw-bold'>Subjects</div>
+                <div class='col fs-4 fw-bold'>Actions</div>
+            </div>
+            <form action="create" method="post" class="row border-bottom border-warning mx-2" id="create-trainer">
+                <div class='col'><input type="hidden"></div>
+                <div class='col'>
+                    <input class="form-control" type="text" name="trnFirstName" id="first-name" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div class="invalid-feedback">
+                        Does not look good!
+                    </div></div>
+                <div class='col'>
+                    <input class="form-control" type="text" name="trnLastName" id="last-name" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div class="invalid-feedback">
+                        Does not look good!
+                    </div>         
                 </div>
-                <form action="create" method="post" class='row border-bottom border-warning'>
-                    <div class='col'><input type="hidden"></div>
+                <div class='col pb-2' id="subject-list">                  
+                    <c:forEach items='${subjectList}' var="subject">
+                        <span class='row border-bottom border-secondary mb-0'>
+                            <div class='col'>${subject.subTitle}
+                                <input id="subject-${subject.subjectKey}" class="float-right mt-2"
+                                       type="checkbox" name="subjectIdSet" value="${subject.subjectKey}">
+                            </div>
+                        </span>
+                    </c:forEach>   
+                </div>
+                <div class="col">
+                    <input type="submit" class='btn btn-warning text-black mb-2' id="add-submit" value="Add a new Trainer.">
+                    <div id="subject-list-check" class="form-label is-valid">
+                        <div id="subject-list-valid" class="valid-feedback">
+                            Subject list looks good!
+                        </div>
+                        <div id="subject-list-invalid" class="invalid-feedback">
+                            You must choose at least one subject!
+                        </div>  
+                    </div>
+                </div>
+            </form>
+
+            <c:forEach items='${trainerList}' var="trainer">
+                <div id="table-row-${trainer.trainerKey}" class='row border-bottom border-warning mx-2'>
+                    <div class='col mt-2'>${trainer.trainerKey}</div>
+                    <div class='col mt-2'>${trainer.trnFirstName}</div>
+                    <div class='col mt-2'>${trainer.trnLastName}</div>
+                    <div class='col pb-2'>
+                        <c:forEach items='${trainer.subjectsSet}' var="subject">
+                            <span class='row border-bottom border-secondary mb-0'>
+                                <div class='col'>${subject.subTitle}</div>
+                            </span>
+                        </c:forEach>
+                    </div>
+                    <div class='col pt-1 pb-2'>
+                        <a href='delete/${trainer.trainerKey}' class='btn btn-danger text-black'>Delete</a>&nbsp;&nbsp;&nbsp;
+                        <button id="replace-${trainer.trainerKey}" class='btn btn-warning text-black' value="${trainer.trainerKey}">Update</button>
+                    </div>
+                </div>
+
+                <form id="update-form-${trainer.trainerKey}" action="update/${trainer.trainerKey}" method="post" class='row border-bottom border-warning mx-2' style="display: none">
+                    <div class='col mt-2'>${trainer.trainerKey}</div><input type="hidden">
                     <div class='col'>
-                        <input class="form-control" type="text" name="trnFirstName" id="first-name" required>
+                        <input class="form-control mt-2" type="text" name="trnFirstName" id="first-name-${trainer.trainerKey}" value="${trainer.trnFirstName}" required>
                         <div class="valid-feedback">
                             Looks good!
                         </div>
@@ -96,7 +155,7 @@
                             Does not look good!
                         </div></div>
                     <div class='col'>
-                        <input class="form-control" type="text" name="trnLastName" id="last-name" required>
+                        <input class="form-control mt-2" type="text" name="trnLastName" id="last-name-${trainer.trainerKey}" value="${trainer.trnLastName}" required>
                         <div class="valid-feedback">
                             Looks good!
                         </div>
@@ -104,77 +163,40 @@
                             Does not look good!
                         </div>         
                     </div>
-                    <div class='col pb-2'>
+                    <div class='col pb-2' id="subject-list-${trainer.trainerKey}">
                         <c:forEach items='${subjectList}' var="subject">
                             <span class='row border-bottom border-secondary mb-0'>
-                                <div class='col'>${subject.subTitle}<input class="float-right mt-2" type="checkbox" name="subjectIdSet" value="${subject.subjectKey}"></div>
+                                <div class='col'>${subject.subTitle}
+                                    <input class="float-right mt-2" type="checkbox" name="subjectIdSet" value="${subject.subjectKey}" id="subject-${trainer.trainerKey}-${subject.subjectKey}"
+                                           <c:forEach items='${trainer.subjectsSet}' var="trnsubject">
+                                               <c:choose>
+                                                   <c:when test="${subject.subjectKey==trnsubject.subjectKey}">
+                                                       checked
+                                                   </c:when>
+                                               </c:choose>
+                                           </c:forEach>
+                                           >
+                                </div>
                             </span>
                         </c:forEach>
                     </div>
-                    <div class="col"><input type="submit" value="Add a new Trainer." class='btn btn-warning text-black mb-2'> </div>
-                </form>
-
-                <c:forEach items='${trainerList}' var="trainer">
-                    <div class='row border-bottom border-warning'>
-                        <div class='col mt-2'>${trainer.trainerKey}</div>
-                        <div class='col mt-2'>${trainer.trnFirstName}</div>
-                        <div class='col mt-2'>${trainer.trnLastName}</div>
-                        <div class='col pb-2'>
-                            <c:forEach items='${trainer.subjectsSet}' var="subject">
-                                <span class='row border-bottom border-secondary mb-0'>
-                                    <div class='col'>${subject.subTitle}</div>
-                                </span>
-                            </c:forEach>
-                        </div>
-                        <div class='col pt-1 pb-2'>
-                            <a href='delete/${trainer.trainerKey}' class='btn btn-danger text-black'>Delete</a>&nbsp;&nbsp;&nbsp;
-                            <button id='update' class='btn btn-warning text-black'>Update</button>
+                    <div class="col">
+                        <input type="submit" class='btn btn-warning text-black mt-2' id="update-submit-${trainer.trainerKey}" value="Update Trainer.">
+                        <div id="subject-list-check" class="form-label is-valid">
+                            <div id="subject-list-valid-${trainer.trainerKey}" class="valid-feedback">
+                                Subject list looks good!
+                            </div>
+                            <div id="subject-list-invalid-${trainer.trainerKey}" class="invalid-feedback">
+                                You must choose at least one subject!
+                            </div>  
                         </div>
                     </div>
-                    <form action="update/${trainer.trainerKey}" method="post" class='row border-bottom border-warning'>
-                        <div class='col'><input type="hidden"></div>
-                        <div class='col'>
-                            <input class="form-control mt-2" type="text" name="trnFirstName" id="first-name" value="${trainer.trnFirstName}" required>
-                            <div class="valid-feedback">
-                                Looks good!
-                            </div>
-                            <div class="invalid-feedback">
-                                Does not look good!
-                            </div></div>
-                        <div class='col'>
-                            <input class="form-control mt-2" type="text" name="trnLastName" id="last-name" value="${trainer.trnLastName}" required>
-                            <div class="valid-feedback">
-                                Looks good!
-                            </div>
-                            <div class="invalid-feedback">
-                                Does not look good!
-                            </div>         
-                        </div>
-                        <div class='col pb-2'>
-                            <c:forEach items='${subjectList}' var="subject">
-                                <span class='row border-bottom border-secondary mb-0'>
-                                    <div class='col'>${subject.subTitle}
-                                        <input class="float-right mt-2" type="checkbox" name="subjectIdSet" value="${subject.subjectKey}"
-                                               <c:forEach items='${trainer.subjectsSet}' var="trnsubject">
-                                                   <c:choose>
-                                                       <c:when test="${subject.subjectKey==trnsubject.subjectKey}">
-                                                           checked
-                                                        </c:when>
-                                                    </c:choose>
-                                               </c:forEach>
-                                        >
-                                    </div>
-                                </span>
-                            </c:forEach>
-                        </div>
-                        <div class="col"><input type="submit" value="Update Trainer." class='btn btn-warning text-black mt-2'> </div>
-                    </form>
-
-                </c:forEach>
-            </div>
-            <footer   class="jumbotron bg-warning text-center">
+                </form>            
+            </c:forEach>
+            <footer   class="jumbotron bg-warning text-center mt-2">
                 <P style="color: black">Copyright &copy; 2022 Yourwash-A.E.</P>
             </footer>
+
         </div><!-- End of Container -->
 
     </body>

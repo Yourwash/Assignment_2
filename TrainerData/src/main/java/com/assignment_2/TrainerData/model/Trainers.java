@@ -7,6 +7,7 @@ package com.assignment_2.TrainerData.model;
 import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -42,10 +43,10 @@ public class Trainers implements Serializable {
     private String trnFirstName;
     @Column(name = "trnLastName")
     private String trnLastName;
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH})
     @JoinTable(name = "trainers_has_subjects", joinColumns = {
         @JoinColumn(name = "ths_trainerKey", referencedColumnName = "trainerKey")}, inverseJoinColumns = {
         @JoinColumn(name = "ths_subjectKey", referencedColumnName = "subjectKey")})
-    @ManyToMany
     private Set<Subjects> subjectsSet;
 
     public Trainers() {

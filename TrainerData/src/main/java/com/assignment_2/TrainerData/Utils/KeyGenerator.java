@@ -30,8 +30,8 @@ public class KeyGenerator {
             rs = ps.executeQuery();
             if (rs.next()) {
                 sql = "select trainerKey from trainers where trainerKey = ?";
+                    key = rs.getInt(1) + 4000;
                 do {
-                    key = rs.getInt(1) + 4001;
                     ps = con.prepareStatement(sql);
                     ps.setInt(1, key);
                     rs = ps.executeQuery();

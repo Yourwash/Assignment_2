@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  */
 public class DbUtils {   
 
-        final static String url = "jdbc:mysql://localhost:3306/george_c._azakas_individual_partb";
+        final static String url = "jdbc:mysql://localhost:3306/assignment_2";
         final static String username = "root"; // root
         final static String password = "M@k@r0n!4Me7ur!"; //
 
