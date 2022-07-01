@@ -36,7 +36,7 @@ public class TrainerController {
             @RequestParam("trnLastName") String lName,
             @RequestParam("subjectIdSet") List<Integer> subKeys) {
         Trainers t = new Trainers();
-        t.setTrainerKey(trainerKeyGenerator());
+        t.setTrainerKey(trainerKeyGenerator()); //Ids are not Auto Incremented due to continuity from last project.
         t.setTrnFirstName(fName);
         t.setTrnLastName(lName);
         Set<Subjects> targetSet = new HashSet<>(subjectService.getAllSubjects((subKeys)));
@@ -59,21 +59,4 @@ public class TrainerController {
         trainerService.updateTrainer(key, fName, lName, targetSet);
         return ("redirect: /");
     }
-
-    ;
-    public String findById() {
-        return ("a");
-    }
-
-    ;
-    public String findAll() {
-        return ("a");
-    }
-
-    ;
-    public String update() {
-        return ("a");
-    }
-;
-
 }
